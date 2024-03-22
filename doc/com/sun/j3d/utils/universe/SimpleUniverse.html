@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><!--JBuilder QuickDoc-->
+<HEAD>
+<TITLE>Class com.sun.j3d.utils.universe.SimpleUniverse</TITLE><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+</HEAD>
+<BODY>
+
+<H2>
+<FONT SIZE="-1">com.sun.j3d.utils.universe</FONT>
+<BR>Class SimpleUniverse</H2>
+<DL>
+<DT>public class <B>SimpleUniverse</B><DT>extends VirtualUniverse
+</DL>
+<DL><DD>This class sets up a minimal user environment to quickly and easily get a Java 3D program up and running. This utility class creates all the necessary objects on the "view" side of the scene graph. Specifically, this class creates a locale, a single ViewingPlatform, and a Viewer object (both with their default values). Many basic Java 3D applications will find that SimpleUniverse provides all necessary functionality needed by their applications. More sophisticated applications may find that they need more control in order to get extra functionality and will not be able to use this class.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+</DL>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>locale</H3>
+<PRE>
+protected Locale <B>locale</B></PRE>
+<DL><DD>Locale reference needed to create the "view" portion of the scene graph.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>viewer</H3>
+<PRE>
+protected Viewer[] <B>viewer</B></PRE>
+<DL><DD>Viewer reference needed to create the "view" portion of the scene graph.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>()</PRE>
+<DL><DD>Creates a locale, a single ViewingPlatform, and and a Viewer object (both with their default values).<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(int&nbsp;numTransforms)</PRE>
+<DL><DD>Creates a locale, a single ViewingPlatform, and a Viewer object (with default values). The ViewingPlatform is created with the specified number of TransformGroups.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>numTransforms</CODE> - The number of transforms to be in the MultiTransformGroup object.</DD>
+<DT><B>Since:</B><DD>Java 3D 1.2.1</DD>
+<DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(Canvas3D&nbsp;canvas)</PRE>
+<DL><DD>Creates a locale, a single ViewingPlatform (with default values), and and a Viewer object. The Viewer object uses default values for everything but the canvas.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>canvas</CODE> - The canvas to associate with the Viewer object. Passing in null will cause this parameter to be ignored and a canvas to be created by the utility.</DD>
+<DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(Canvas3D&nbsp;canvas,
+                      int&nbsp;numTransforms)</PRE>
+<DL><DD>Creates a locale, a single ViewingPlatform, and a Viewer object The Viewer object uses default values for everything but the canvas. The ViewingPlatform is created with the specified number of TransformGroups.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>canvas</CODE> - The canvas to associate with the Viewer object. Passing in null will cause this parameter to be ignored and a canvas to be created by the utility.</DD>
+<DD><CODE>numTransforms</CODE> - The number of transforms to be in the MultiTransformGroup object.</DD>
+<DT><B>Since:</B><DD>Java 3D 1.2.1</DD>
+<DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+<DD>MultiTransformGroup</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(HiResCoord&nbsp;origin,
+                      int&nbsp;numTransforms,
+                      Canvas3D&nbsp;canvas,
+                      URL&nbsp;userConfig)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> use ConfiguredUniverse constructors to read a configuration file</I></DD>
+<DD>Creates the "view" side of the scene graph. The passed in parameters override the default values where appropriate.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>origin</CODE> - The origin used to set the origin of the Locale object. If this object is null, then 0.0 is used.</DD>
+<DD><CODE>numTransforms</CODE> - The number of transforms to be in the MultiTransformGroup object.</DD>
+<DD><CODE>canvas</CODE> - The canvas to draw into. If this is null, it is ignored and a canvas will be created by the utility.</DD>
+<DD><CODE>userConfig</CODE> - The URL to the user's configuration file, used by the Viewer object. This is never examined and default values are always taken.</DD>
+<DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+<DD>MultiTransformGroup</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(HiResCoord&nbsp;origin,
+                      int&nbsp;numTransforms,
+                      Canvas3D&nbsp;canvas,
+                      URL&nbsp;userConfig,
+                      LocaleFactory&nbsp;localeFactory)</PRE>
+<DL><DD><B>Deprecated.</B>&nbsp;<I> use ConfiguredUniverse constructors to read a configuration file</I></DD>
+<DD>Creates the "view" side of the scene graph. The passed in parameters override the default values where appropriate.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>origin</CODE> - The origin used to set the origin of the Locale object. If this object is null, then 0.0 is used.</DD>
+<DD><CODE>numTransforms</CODE> - The number of transforms to be in the MultiTransformGroup object.</DD>
+<DD><CODE>canvas</CODE> - The canvas to draw into. If this is null, it is ignored and a canvas will be created by the utility.</DD>
+<DD><CODE>userConfig</CODE> - The URL to the user's configuration file, used by the Viewer object. This is never examined and default values are always taken.</DD>
+<DD><CODE>localeFactory</CODE> - The Locale Factory which will instantiate the locale(s) for this universe.</DD>
+<DT><B>See Also:</B><DD>Locale</DD>
+<DD>Viewer</DD>
+<DD>ViewingPlatform</DD>
+<DD>MultiTransformGroup</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(ViewingPlatform&nbsp;viewingPlatform,
+                      Viewer&nbsp;viewer)</PRE>
+<DL><DD>Creates the "view" side of the scene graph. The passed in parameters override the default values where appropriate.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>viewingPlatform</CODE> - The viewingPlatform to use to create the "view" side of the scene graph.</DD>
+<DD><CODE>viewer</CODE> - The viewer object to use to create the "view" side of the scene graph.</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+public <B>SimpleUniverse</B>(ViewingPlatform&nbsp;viewingPlatform,
+                      Viewer&nbsp;viewer,
+                      LocaleFactory&nbsp;localeFactory)</PRE>
+<DL><DD>Creates the "view" side of the scene graph. The passed in parameters override the default values where appropriate.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>viewingPlatform</CODE> - The viewingPlatform to use to create the "view" side of the scene graph.</DD>
+<DD><CODE>viewer</CODE> - The viewer object to use to create the "view" side of the scene graph.</DD>
+<DD><CODE>localeFactory</CODE> - The factory used to create the Locale Object</DD>
+</DL>
+<HR>
+
+<H3>SimpleUniverse</H3>
+<PRE>
+<B>SimpleUniverse</B>(HiResCoord&nbsp;origin,
+               LocaleFactory&nbsp;localeFactory)</PRE>
+<DL><DD>Constructor for use by Configured Universe<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B>
+</FONT></TD></TR></TABLE>
+
+<H3>createLocale</H3>
+<PRE>
+private void <B>createLocale</B>(HiResCoord&nbsp;origin,
+                          LocaleFactory&nbsp;localeFactory)</PRE>
+<DL><DD>Create the Locale using the LocaleFactory and HiRes origin, if specified.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<H3>getLocale</H3>
+<PRE>
+public Locale <B>getLocale</B>()</PRE>
+<DL><DD>Returns the Locale object associated with this scene graph.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>The Locale object used in the construction of this scene graph.</DD>
+</DL>
+<HR>
+
+<H3>getViewer</H3>
+<PRE>
+public Viewer <B>getViewer</B>()</PRE>
+<DL><DD>Returns the Viewer object associated with this scene graph. SimpleUniverse creates a single Viewer object for use in the scene graph.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>The Viewer object associated with this scene graph.</DD>
+</DL>
+<HR>
+
+<H3>getViewingPlatform</H3>
+<PRE>
+public ViewingPlatform <B>getViewingPlatform</B>()</PRE>
+<DL><DD>Returns the ViewingPlatform object associated with this scene graph.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>The ViewingPlatform object of this scene graph.</DD>
+</DL>
+<HR>
+
+<H3>getCanvas</H3>
+<PRE>
+public Canvas3D <B>getCanvas</B>()</PRE>
+<DL><DD>Returns the Canvas3D object associated with this Java 3D Universe.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>A reference to the Canvas3D object associated with the Viewer object. This method is equivalent to calling getCanvas(0).</DD>
+<DT><B>See Also:</B><DD>Viewer</DD>
+</DL>
+<HR>
+
+<H3>getCanvas</H3>
+<PRE>
+public Canvas3D <B>getCanvas</B>(int&nbsp;canvasNum)</PRE>
+<DL><DD>Returns the Canvas3D object at the specified index associated with this Java 3D Universe.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>canvasNum</CODE> - The index of the Canvas3D object to retrieve. If there is no Canvas3D object for the given index, null is returned.</DD>
+<DT><B>Returns:</B><DD>A reference to the Canvas3D object associated with the Viewer object.</DD>
+</DL>
+<HR>
+
+<H3>addBranchGraph</H3>
+<PRE>
+public void <B>addBranchGraph</B>(BranchGroup&nbsp;bg)</PRE>
+<DL><DD>Used to add Nodes to the geometry side (as opposed to the view side) of the scene graph. This is a short cut to getting the Locale object and calling that object's addBranchGraph() method.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>BranchGroup</CODE> - The BranchGroup to attach to this Universe's Locale.</DD>
+</DL>
+<HR>
+
+<H3>getPreferredConfiguration</H3>
+<PRE>
+public static GraphicsConfiguration <B>getPreferredConfiguration</B>()</PRE>
+<DL><DD>Finds the preferred <code>GraphicsConfiguration</code> object for the system. This object can then be used to create the Canvas3D objet for this system.<DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Returns:</B><DD>The best <code>GraphicsConfiguration</code> object for the system.</DD>
+</DL>
+<HR>
+
+<H3>cleanup</H3>
+<PRE>
+public void <B>cleanup</B>()</PRE>
+<DL><DD>Cleanup memory use and reference by SimpleUniverse. Typically it should be invoked by the applet's destroy method.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+</BODY>
+</HTML>
