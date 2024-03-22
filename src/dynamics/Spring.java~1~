@@ -1,0 +1,68 @@
+package dynamics;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2006</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+public class Spring {
+  //************ SPRING CHARACTARESTICS ***********
+  // spring length:
+  double length;
+  // spring coefficient:
+  double k;
+  // damping coefficient:
+  double q;
+
+  //************ SPRING STATE VARIABLES ***********
+  // spring length in rest situation:
+  double restLength;
+  // spring current deformation: restLength - crntLength
+  double crntDeform;
+  // the same as crntSeform but in the previous time step
+  double prevDeform;
+  // deformation velocity: delta(deformation)/timeStep
+  double deformVeloc;
+  // magnitude of spring force:
+  double forceMagnitude;
+  // direction of spring force:
+  double[] Force = new double[3];
+  double[] Torque = new double[3];
+
+  //***************** SPRING METHODS **************
+  // a method for computing spring forces it takes a vehicle as an argument and
+  // returns the forces as vectors
+  public void calcForceAndTorque(Vehicle vehicle, int index, double timeStep){
+    // calculate deformation:
+    crntDeform = restLength-vehicle.geometricalVehicle.getCrntLngth(index);
+    // calculate deformation velocity
+    deformVeloc = (crntDeform - prevDeform)/timeStep;
+    // calculate the magnitude of spring force:
+    if(crntDeform >0)
+      forceMagnitude = -k * crntDeform - q * deformVeloc;
+    else
+      forceMagnitude = 0;
+    // return spring force in terms of a vector:
+    // all spring forces have the direction of the Y axes in the vehicle fixed coordinate system
+    for(int i=0; i<3; i++)
+      Force[i] = forceMagnitude * vehicle.R[1][i];
+  }
+
+  public Spring(double length, double k, double q) {
+    this.length = length;
+    this.k = k;
+    this.q = q;
+  }
+  public Spring(){
+    length = 0.5;
+    k = 700;
+    q = 100;
+  }
+  public static void main(String[] args) {
+
+  }
+}

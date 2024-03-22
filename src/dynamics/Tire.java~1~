@@ -1,0 +1,337 @@
+package dynamics;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2006</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+public class Tire {
+  //**************** TIRE CHARACTARESTICS ****************
+  double[] segma_0 = new double[2];
+  double[] segma_1 = new double[2];
+  double[] segma_2 = new double[2];
+  // kinematic and static friction coefficients in both x and y directions:
+  double[] miuK = new double[2];
+  double[] miuS = new double[2];
+  // tread length et al:
+  double L = 0.15;      /*    L    */
+  double xiLL = 0.02;   /*  xiL/L  */
+  double xiRL = 0.77;   /*  xiR/L  */
+  // derived variables from the 3 previous ones:
+  double fmax = 11;//**********Error Error Error Error Error Error Error Error Error Error
+  double xiL = xiLL * L;
+  double alpha1 = fmax/xiL;
+  double xiR = xiRL * L;
+  double alpha2 = -fmax/(L-xiR);
+  double beta2 = -L * alpha2;
+
+  double raw = 1;
+  double vs = 3.96;
+  // wheel radius:
+  double r = 0.32;
+  // wheel moment of inertia:
+  double jw = .5*10*r*r;
+
+  // tire rolling resistance parameters:
+  double Cr0 = 0.01;
+  double Crv = 0.00014;
+  // tire rolling resistance force:
+  double RR;
+
+  //**************** TIRE STATE VARIABLES ****************
+  // slip angle:
+  //double alpha;
+  // slip velocity: x,y components:
+  double[] Vr = new double[2];
+  // tire angular velocity
+  double W;
+  // tire vector speed in world space:
+  double[] V = new double[3];
+  // tire vector speed projected on ground plane:
+  double[] VgroundProjection = new double[3];
+  // tire heading vector in world space:
+  double[] heading = new double[3];
+  // tire heading vector in world space projected on ground:
+  double[] headingGroundProjection = new double[3];
+  // tire axle vector in world space:
+  double[] axle = new double[3];
+  // tire axle vector in world space projected on ground:
+  double[] axleGroundProjection = new double[3];
+  // cross product of headingGroundProjection and VgroundProjection
+  // indicates the slip angle algebraically:
+  double indicator[] = new double[3];
+  // road tire interaction point:
+  double worldRoad_tirePoint[] = new double[3];
+  // tread fixed coordinate system:
+  double treadCoordSystemR[][] = new double[3][3];
+  double treadCoordSystemX[] = new double[3];
+  double[] soso = new double[3];
+  double[][] riri = new double[3][3];
+  double[] VgroundProjectionInTreadCoordSystem =new double[3];
+  double[] arm = new double[3];
+
+  double[] temp = new double[2];
+  double[] temp1 = new double[3];
+  double[] temp2 = new double[3];
+  double[] temp3 = new double[3];
+
+  double gVr;                     /*   (2)   */
+  double lamdaVr;                 /*   (3)   */
+  double[] CoVr = new double[2];  /*   (4)   */
+  double[] C1 = new double[2];    /*   (5)   */   /*   C1i   */
+  double[] C2 = new double[2];    /*   (5)   */   /*   C2i   */
+  double[] Zss = new double[2];   /*   (5)   */
+  double[] Kss = new double[2];   /*   (6)   */
+  double[] Z = new double[2];     /*   (7)   */
+  double[] Zdot = new double[2];  /*   (7)   */
+
+  // an auxiliary variable:
+  double[] coco = new double[2];
+  //*********** TIRE FORCES ****************
+  double[] xyForce = new double[2];
+  //***** FORCE VECTOR IN TREAD SPACE ******
+  double[] ForceInTreadSpace = new double[3];
+  //***** FORCE VECTOR IN WORLD SPACE ******
+  double[] Force = new double[3];
+  //***** FORCE VECTOR IN WORLD SPACE ******
+  double[] Torque = new double[3];
+
+  //an auxiliary function
+  private int sign(double value){
+    if (value > 0)
+      return 1;
+    else
+      if (value < 0)
+        return -1;
+      else
+        return 0;
+  }
+  //********* GENERATING TIRE FORCES *******
+  public void calcForceAndTorque(Vehicle vehicle, double drivingTorque, double brakingTorque,
+                       double steeringAngle, double timeStep, int index){
+
+    //**************************    (1)    **************************
+
+    // first we have to determine wheel angular velocity in order to determine slip
+    // determining W:
+    // first we determine rolling resistance, the term Mv.g can be substituted
+    //with spring reaction force (Newton's 3rd law)
+    RR = (vehicle.spring[index].forceMagnitude + vehicle.mass/4) *(Cr0+Crv*W*r);
+    // computing total torque:
+    // driving torque is positive counterclockwise
+    // both BRAKING TORQUE and ROLLIG RESISTANCE always oppposites velocity
+    // driving force generates a positive torqure when positive and vice versa:
+    double totalTorque = drivingTorque - sign(W)*brakingTorque
+                          - sign(W)*RR - xyForce[0]*r;
+    double Wdot = totalTorque / jw;
+    W = Solver.solve(W,Wdot,timeStep);
+    // slip can now be easily determined: but we have to know the velocity vector
+    // of the chassis corner where the wheel exists:
+    MatrixAlgebra.sub(temp1,vehicle.spring[index].worldStrut,vehicle.X);
+    MatrixAlgebra.crossProd(temp2,vehicle.Omega,temp1);
+    MatrixAlgebra.add(V,temp2,vehicle.V);
+
+    // calculating the projection ofV on ground plane:
+    VgroundProjection[0] = V[0];
+    VgroundProjection[1] = 0;
+    VgroundProjection[2] = V[2];
+    // calculating wheel heading projection on ground plane:
+    // first we calculate wheel heading vector in vehicle space:
+    temp1[0] = Math.cos(steeringAngle);
+    temp1[1] = 0;
+    temp1[2] = Math.sin(steeringAngle);
+    // then we derive its components in world space:
+    MatrixAlgebra.mul(heading,vehicle.R,temp1);
+    // finally we project it on ground plane:
+    headingGroundProjection[0] = heading[0];
+    headingGroundProjection[1] = 0;
+    headingGroundProjection[2] = heading[2];
+
+    // determining slip angle:
+    double tanHeadingGroundProjection = headingGroundProjection[2]/headingGroundProjection[0];
+    double tanVgroundProjection = VgroundProjection[2] / VgroundProjection[0];
+    double headingGroundProjectionAngle = Math.atan(tanHeadingGroundProjection);
+    double VgroundProjectionAngle = Math.atan(tanVgroundProjection);
+
+
+
+    // calculating wheel axle projection on ground plane:
+    // first we calculate wheel axle normalized vector in vehicle space:
+    temp2[0] = Math.sin(steeringAngle);
+    temp2[1] = 0;
+    temp2[2] = Math.cos(steeringAngle);
+    // then we derive its components in world space:
+    MatrixAlgebra.mul(axle,vehicle.R,temp2);
+
+    // finally we project it on ground plane:
+    axleGroundProjection[0] = axle[0];
+    axleGroundProjection[1] = 0;
+    axleGroundProjection[2] = axle[2];
+
+    // obtaining the tread fixed coordinate system
+    //****
+    MatrixAlgebra.normalize(soso,headingGroundProjection);
+    treadCoordSystemR[0][0] = soso[0];
+    treadCoordSystemR[1][0] = soso[1];
+    treadCoordSystemR[2][0] = soso[2];
+    //****
+    treadCoordSystemR[0][1] = 0;
+    treadCoordSystemR[1][1] = 0;
+    treadCoordSystemR[2][1] = 0;
+    //****
+    MatrixAlgebra.normalize(soso,axleGroundProjection);
+    treadCoordSystemR[0][2] = soso[0];
+    treadCoordSystemR[1][2] = soso[1];
+    treadCoordSystemR[2][2] = soso[2];
+
+    treadCoordSystemX[0] = vehicle.spring[index].worldStrut[0];
+    treadCoordSystemX[1] = 0;
+    treadCoordSystemX[2] = vehicle.spring[index].worldStrut[2];
+
+
+    //*********
+    // obtaining wheel ground velocity in tread fixed coordinate system:
+    MatrixAlgebra.mul(soso,treadCoordSystemX,-1);
+    MatrixAlgebra.mul(riri,treadCoordSystemR,-1);
+//    MatrixAlgebra.add(VgroundProjectionInTreadCoordSystem,treadCoordSystemX,
+//                      VgroundProjection);
+    MatrixAlgebra.mul(VgroundProjectionInTreadCoordSystem,riri,
+                      VgroundProjection);
+
+    // velocityMagnitude
+    double vm = MatrixAlgebra.getMagnitude(VgroundProjection);
+
+    // we now have all the data to compute Vri (slip velocity)
+    double wr = W * r;
+    Vr[0] = - (VgroundProjectionInTreadCoordSystem[0] - wr);
+    Vr[1] = - VgroundProjectionInTreadCoordSystem[2];
+
+    //**************************    (2)    **************************
+    // computing gVr:
+
+    gVr = Math.exp(-MatrixAlgebra.getMagnitude(Vr) / vs);
+    MatrixAlgebra.power(coco,miuK,2);
+    MatrixAlgebra.mul(coco,coco,Vr);
+    double mk2vr = MatrixAlgebra.getMagnitude(coco);
+    MatrixAlgebra.mul(coco,miuK,Vr);
+    double mkvr = MatrixAlgebra.getMagnitude(coco);
+    double a = mk2vr/mkvr;
+
+    MatrixAlgebra.power(coco,miuK,2);
+    MatrixAlgebra.mul(coco,coco,Vr);
+    double ms2vr = MatrixAlgebra.getMagnitude(coco);
+    MatrixAlgebra.mul(coco,miuK,Vr);
+    double msvr = MatrixAlgebra.getMagnitude(coco);
+    double b = mk2vr/mkvr;
+
+    gVr *= (b-a);
+    gVr += b;
+
+    //**************************    (3)    **************************
+    // computing lamdaVr:
+    lamdaVr = mk2vr / gVr;
+
+    //**************************    (4)    **************************
+    // computing Coi:
+    CoVr[0] = lamdaVr * segma_0[0] / (Math.pow(miuK[0],2));
+    CoVr[1] = lamdaVr * segma_0[1] / (Math.pow(miuK[1],2));
+
+    //**************************    (5)    **************************
+    // computing Zi'ss
+    for (int i=0; i<2; i++){
+      C1[i] = Vr[i] * Math.pow(miuK[i],2)   /   (lamdaVr * segma_0[i]);
+      C2[i] = Math.abs(wr)/ CoVr[i];
+    }
+    double row1,row2,row3,row4,row5;
+    double xiLC2i, xiRC2i,LC2i;
+    for (int i=0; i<2; i++){
+      xiLC2i = -xiL / C2[i];
+      xiRC2i = -xiR / C2[i];
+      LC2i = -L / C2[i];
+      row1 = alpha1 * (Math.sqrt(xiL)/2 + C2[i]* (Math.exp(xiLC2i) - Math.exp(xiLC2i)));
+      row2 = fmax * ((xiR-xiL) + C2[i]*(Math.exp(xiRC2i) - Math.exp(xiLC2i)));
+      row3 = .5 * alpha2 * (Math.sqrt(L) - Math.sqrt(xiR)) + beta2 * (L-xiR);
+      row4 = alpha2 * C2[i] * ( L*Math.exp(LC2i) - xiR*Math.exp(xiRC2i));
+      row5 = C2[i] * (beta2 + alpha2*C2[i]) * (Math.exp(LC2i)-Math.exp(xiRC2i));
+      // computing Zi'ss is straightforwars. Fn equals spring reaction force:
+      Zss[i] = (1/(vehicle.spring[index].forceMagnitude + vehicle.mass/4)) * C1[i] * (row1+row2+row3+row4+row5);
+    }
+
+    //**************************    (6)    **************************
+    // computing Ki'ss
+    for (int i=0; i<2;i++)
+        if (Vr[i] == 0 )
+            Zss[i] =1;
+    for(int i=0;i<2;i++)
+      Kss[i] = (1/Math.abs(wr)) * (Vr[i]/Zss[i]-CoVr[i]);
+
+    //**************************    (7)    **************************
+    // computing Zi dot
+    for(int i=0;i<2;i++)
+      Zdot[i] = Vr[i] - (CoVr[i]-Kss[i])*Z[i];
+
+    //**************************    (8)    **************************
+    // we have all the data needed too compute road-tire interaction:
+//    for(int i=0;i<2;i++)
+//      xyForce[i] = - (vehicle.spring[index].forceMagnitude + vehicle.mass/4) *
+//      (segma_0[i]*Z[i] + segma_1[i]*Zdot[i] + segma_2[i]*Vr[i]);
+        xyForce[0] = 0.00002;
+        xyForce[1] = 0;
+    // we have to return wheel forces in terms of vector representations:
+    // first we compute force vector in tread-fixed coordinate system, then
+    // we shift to calculate its position in world space:
+
+    // obtaining force vector in tread-fixed coordinate system:
+    ForceInTreadSpace[0] = xyForce[0];
+    ForceInTreadSpace[1] = 0;
+    ForceInTreadSpace[2] = xyForce[1];
+    // obtaining force vector in world space:
+    MatrixAlgebra.mul(Force,treadCoordSystemR,ForceInTreadSpace);
+    // obtaining torque:
+    MatrixAlgebra.sub(arm,worldRoad_tirePoint,vehicle.X);
+    MatrixAlgebra.crossProd(Torque,arm,Force);
+
+
+    // we have to update Zi(t) for the next time step:
+    for (int i=0; i<2; i++)
+      Z[i] = Solver.solve(Z[i],Zdot[i],timeStep);
+
+
+  }
+
+
+  public Tire() {
+    segma_0[0] = 555;
+    segma_0[1] = 470;
+
+    segma_1[0] = 1;//error error error
+    segma_1[1] = 1;//error error error
+
+    segma_2[0] = 0;
+    segma_2[1] = 0;
+
+    miuK[0] = 0.7516;
+    miuK[1] = 0.75;
+
+    miuS[0] = 1.35;
+    miuS[1] = 1.4;
+
+    Z[0]=Z[1]=0;
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+  public static void main(String[] args) {
+    Tire tire1 = new Tire();
+
+  }
+
+    private void jbInit() throws Exception {
+    }
+}

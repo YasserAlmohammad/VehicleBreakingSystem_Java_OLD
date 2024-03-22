@@ -1,0 +1,56 @@
+package dynamics;
+import java.util.Vector;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2006</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+public class Vehicle extends RigidBody{
+  VehicleGeometry geometricalVehicle = new VehicleGeometry();
+  Vector Vv = new Vector(4);
+
+  Spring[] spring = new Spring[4];
+  Tire[] tire = new Tire[4];
+
+
+
+  public double getSlipAngle(int i, double[] velocityVector){
+    return 12;
+  }
+  public void calculateForceAndTorque(double[] drvTorque,double[] brkTorque,double[] steeringAngle,double timeStep){
+    // reset FRCE and TORQUE :
+    for(int i=0; i<3; i++){
+      FORCE[i]  = 0;
+      TORQUE[i] = 0;
+    }
+    for(int i=0; i<4; i++){
+      spring[i].calcForceAndTorque(this,i,timeStep);
+      tire[i].calcForceAndTorque(this,brkTorque[i],drvTorque[i],steeringAngle[i],timeStep,i);
+    }
+    for(int i=0; i<4; i++){
+      MatrixAlgebra.add(FORCE,FORCE,spring[i].Force);
+      MatrixAlgebra.add(TORQUE,TORQUE,spring[i].Torque);
+
+      MatrixAlgebra.add(FORCE,FORCE,tire[i].Force);
+      MatrixAlgebra.add(TORQUE,TORQUE,tire[i].Torque);
+    }
+  }
+  public Vehicle() {
+    for(int i=0; i<4; i++){
+      spring[i] = new Spring();
+      tire[i] = new Tire();
+      //Vv.setElementAt(new double[3],i);
+    }
+  }
+  public void init(double speed){
+
+  }
+  public static void main(String[] args) {
+    Vehicle vehicle1 = new Vehicle();
+  }
+}

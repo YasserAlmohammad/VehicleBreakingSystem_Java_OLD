@@ -1,0 +1,31 @@
+[PropertyInfo]
+angles,javax.vecmath.Vector3d,false,false, , ,false,<default>
+BLCornerBodyCoords,javax.vecmath.Point3d,false,false, , ,true,<default>
+BLCornerCoords,javax.vecmath.Point3d,false,false, , ,false,<default>
+BLWheel,vehiclesimulationcore.WheelGeom,false,false, , ,false,<default>
+body,vehiclesimulationcore.BodyGeom,false,false, , ,false,<default>
+BRCornerBodyCoords,javax.vecmath.Point3d,false,false, , ,true,<default>
+BRCornerCoords,javax.vecmath.Point3d,false,false, , ,false,<default>
+BRWheel,vehiclesimulationcore.WheelGeom,false,false, , ,false,<default>
+FLCornerBodyCoords,javax.vecmath.Point3d,false,false, , ,true,<default>
+FLCornerCoords,javax.vecmath.Point3d,false,false, , ,false,<default>
+FLWheel,vehiclesimulationcore.WheelGeom,false,false, , ,false,<default>
+FRCornerBodyCoords,javax.vecmath.Point3d,false,false, , ,true,<default>
+FRCornerCoords,javax.vecmath.Point3d,false,false, , ,false,<default>
+FRWheel,vehiclesimulationcore.WheelGeom,false,false, , ,false,<default>
+height,double,false,false, , ,false,<default>
+length,double,false,false, , ,false,<default>
+navigator,vehiclesimulationcore.KeyboardBehaviours,false,false, , ,false,<default>
+pos,javax.vecmath.Vector3d,false,false, , ,true,<default>
+rotMat,javax.vecmath.Matrix3d,false,false, , ,false,<default>
+rotXMat,javax.vecmath.Matrix3d,false,false, , ,false,<default>
+rotYMat,javax.vecmath.Matrix3d,false,false, , ,false,<default>
+rotZMat,javax.vecmath.Matrix3d,false,false, , ,false,<default>
+transform,javax.media.j3d.Transform3D,false,false, , ,false,<default>
+vehicleTG,javax.media.j3d.TransformGroup,false,false, , ,false,<default>
+width,double,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

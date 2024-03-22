@@ -1,0 +1,49 @@
+package dynamics;
+
+/**
+ * <p>Title: Vehicle Dynamics Simulation Program</p>
+ * <p>Description: vehicle dynmaics, braking system simulation</p>
+ * <p>Copyright: Copyright (c) 2006 Faculty of Information Technology Engineering at Damascus University</p>
+ * <p>Company: FIT</p>
+ * @author Yasser Almohammad(Graphics Design and implementation), Ahmad Zoubi, Usama Rmelawi, Mohammad Askar,Qousai Dabour (vehicle case study, core functionality)
+ * @version 1.0
+ */
+
+public class RigidBody {
+
+  /*Constant Coantities*/
+  double mass;
+  double[][] Ibody = new double[3][3];
+  double[][] IbodyInv = new double[3][3];
+
+  /*State Variables*/
+  double[] X = new double[3];
+  double[] Q = new double[4];
+  double[] P = new double[3];
+  double[] L = new double[3];
+
+  /*Derived Quantities (auxiliary variables) */
+  double[][] Iinv = new double[3][3];
+  double[][] R = new double[3][3];
+  double[] V = new double[3];
+  double[] Omega = new double[3];
+
+  /* Computed coantities*/
+  double[] force = new double[3];
+  double[] torque = new double[3];
+
+  /*METHOD to update state variables*/
+  public void updateState(double t){
+
+    /* update X(t)*/
+    X[0]=Solver.solve(X[0],V[0],t);
+    X[1]=Solver.solve(X[1],V[1],t);
+    X[2]=Solver.solve(X[2],V[2],t);
+  }
+
+  public RigidBody() {
+  }
+  public static void main(String[] args) {
+    RigidBody rigidBody1 = new RigidBody();
+  }
+}

@@ -1,0 +1,22 @@
+package dynamics;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2006</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+public class Solver {
+  public double solve(double x, double xDot, double t){
+    return 3;
+  }
+
+  public Solver() {
+  }
+  public static void main(String[] args) {
+    Solver solver1 = new Solver();
+  }
+}
